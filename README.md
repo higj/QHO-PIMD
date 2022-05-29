@@ -32,6 +32,12 @@ The primitive (or *thermodynamic*) energy estimator is calculated using Eqns. (2
 
 $$E^{\mathrm{TD}}=\frac{P}{2\beta}\left[1-\sum_{i=1}^{P}\frac{m}{\beta\hbar^{2}}\left(q_{i}-q_{i+1}\right)^{2}\right]+\frac{1}{P}\sum_{i=1}^{P}V\left(q_{i}\right)$$
 
+where
+
+$$V\left(x\right)=\frac{1}{2}m\omega_{0}^{2}x^{2}$$
+
+is the potential energy associated with the QHO. 
+
 The centroid-virial energy estimator is calculated using Eqn. (3.15) from [CMMR]:
 
 $$E^{\mathrm{CV}} = \frac{1}{2\beta} + \frac{1}{2 P}\sum_{i=1}^{P} \left( q_i - \bar{q} \right) \frac{\partial V}{\partial q_i} + \frac{1}{P}\sum_{i=1}^{P}V\left(q_{i}\right),\quad \bar{q} = \frac{1}{P} \sum_{i=1}^{P} q_i $$
