@@ -4,6 +4,10 @@ kB = 0.08617  # meV/K
 
 # System parameters
 qho_freq = 50 / hbar  # QHO frequency (THz)
-gamma = 0.3  # Friction term for the Langevin thermostat
-
 mass = 0.04778 * hbar / qho_freq  # Argon mass expressed through other constants
+
+gamma = 100
+dt = 1e-3
+steps = 1e5
+save_freq = 1000
+estimator = 'default'

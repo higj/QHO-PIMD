@@ -20,3 +20,9 @@ def inv_cdf(beta, mass):
 # Analytic expression for average energy in a 1D QHO vs thermodynamic beta
 def energy_vs_beta(beta):
     return 0.5 + 1 / (np.exp(beta) - 1)
+
+
+# Nice title for the plots
+def print_title(beads_num, dt, steps, gamma, est):
+    est_dic = {'default': 'Primitive', 'centroid_virial': 'CVKE', 'simple_virial_pe': '2V', 'simple_virial_ke': '2K'}
+    return r"$P={0}, \Delta t={1:.1e}, n={2:.1e}, \gamma = {3:.1e}$, Estimator: {4}".format(beads_num, dt, steps, gamma, est_dic[est])

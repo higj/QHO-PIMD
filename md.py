@@ -24,7 +24,7 @@ class MDSimulation:
         mean_energy: The mean energy calculated during the simulation using an estimator specified by est
     """
 
-    def __init__(self, beta, dt, mass, bead_num=6, size=1, save_freq=1, tsteps=1000, enable_thermostat=True, estimator_type='default'):
+    def __init__(self, beta, dt, mass, bead_num=6, size=1, save_freq=1, tsteps=1000, enable_thermostat=True, estimator_type='default', threshold=0.1):
         self.beta = beta
         self.p = bead_num
         self.dt = dt
@@ -32,9 +32,10 @@ class MDSimulation:
         self.mass_arr = np.full(bead_num, mass)
         self.size = size
         self.save_freq = save_freq
-        self.tsteps = tsteps
+        self.tsteps = int(tsteps)
         self.enable_thermostat = enable_thermostat
         self.est = estimator_type
+        self.threshold = threshold
 
         self.sim_time = self.dt * self.tsteps  # Total simulation time
 
@@ -50,6 +51,8 @@ class MDSimulation:
     def run(self):
         """Run an MD simulation by performing a series of velocity Verlet steps."""
 
+        calc_threshold = int(self.threshold * self.tsteps)
+
         for step in range(self.tsteps):
             if self.enable_thermostat:
                 self.langevin_step()  # Perform a Langevin step (thermostat)
@@ -59,14 +62,17 @@ class MDSimulation:
             if self.enable_thermostat:
                 self.langevin_step()  # Perform a Langevin step (thermostat)
 
+            if self.enable_threshold and step < calc_threshold:
+                continue
+
             # Perform calculations every nth step (where n=save_freq)
             if step % self.save_freq == 0:
                 # Accumulate contributions to the average energy
                 # (Based on Eqn. 2.37 from "Path Integral Methods in Atomistic Modelling"
                 # by Ceriotti, Manolopoulos, Markland and Rossi; "CMMR" for short)
-                self.mean_energy += self.total_energy_estimator() * (self.dt * self.save_freq)
+                self.mean_energy += self.total_energy_estimator()
 
-        self.mean_energy = self.mean_energy / self.sim_time
+        self.mean_energy /= self.tsteps - calc_threshold
 
     def gen_pos(self):
         """Generate random positions for the initial conditions by sampling a uniform distribution."""
@@ -90,9 +96,9 @@ class MDSimulation:
         """Implement a thermostat according to the Langevin scheme. This is necessary in order to
             sample a canonical ensemble, as opposed to the NVE ensemble."""
 
-        noise = np.random.normal()  # The noise term (time derivative of a Wiener process)
+        noise = np.random.normal(size=self.p)  # The noise term (time derivative of a Wiener process)
         a = np.exp(-0.5 * params.gamma * self.dt)
-        b = np.sqrt(1 - a**2)*np.sqrt(1 / (self.mass_arr * self.beta))
+        b = np.sqrt((1 - a**2) / (self.mass_arr * self.beta))
         self.vel_arr = a * self.vel_arr + b * noise
 
     def vv_step(self):
@@ -121,7 +127,7 @@ class MDSimulation:
         prefactor = self.mass_arr[bead_num] * chain_frequency**2  # Nearest-neighbor coupling constant
         # Only interactions with the two closest neighbors are included.
         # The modulo operation reflects the periodic boundary conditions.
-        return prefactor * (self.pos_arr[(bead_num + 1) % self.p] + self.pos_arr[(bead_num - 1) % self.p]
+        return prefactor * (self.pos_arr[(bead_num + 1) % self.p] + self.pos_arr[bead_num - 1]
                             - 2 * self.pos_arr[bead_num])
 
     def get_external_force(self, bead_num):
@@ -196,5 +202,11 @@ class MDSimulation:
             return self.potential_energy_estimator() + self.centroid_virial_ke()
         elif self.est == 'virial':
             return self.virial_energy_estimator()
+        elif self.est_type == 'simple_virial_pe':
+            # Only for QHO: the mean of E is twice the PE
+            return 2 * self.potential_energy_estimator()
+        elif self.est_type == 'simple_virial_ke':
+            # Only for QHO: the mean of E is twice the KE
+            return 2 * self.kinetic_energy_estimator()
 
         return self.potential_energy_estimator() + self.kinetic_energy_estimator()
