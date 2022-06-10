@@ -34,7 +34,7 @@ class MDSimulation:
         self.save_freq = save_freq
         self.tsteps = int(tsteps)
         self.enable_thermostat = enable_thermostat
-        self.est = estimator_type
+        self.est_type = estimator_type
         self.threshold = threshold
 
         self.sim_time = self.dt * self.tsteps  # Total simulation time
@@ -198,9 +198,9 @@ class MDSimulation:
     def total_energy_estimator(self):
         """Returns the total energy estimator of the desired type."""
 
-        if self.est == 'centroid_virial':
+        if self.est_type == 'centroid_virial':
             return self.potential_energy_estimator() + self.centroid_virial_ke()
-        elif self.est == 'virial':
+        elif self.est_type == 'virial':
             return self.virial_energy_estimator()
         elif self.est_type == 'simple_virial_pe':
             # Only for QHO: the mean of E is twice the PE
