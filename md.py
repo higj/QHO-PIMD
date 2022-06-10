@@ -62,7 +62,7 @@ class MDSimulation:
             if self.enable_thermostat:
                 self.langevin_step()  # Perform a Langevin step (thermostat)
 
-            if self.enable_threshold and step < calc_threshold:
+            if step < calc_threshold:
                 continue
 
             # Perform calculations every nth step (where n=save_freq)
