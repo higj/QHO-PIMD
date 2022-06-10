@@ -20,15 +20,12 @@ For the centroid-virial kinetic energy estimator (two runs):
 
 For the default (primitive) energy estimator ($\beta\hbar\omega_0 = 5$):
 
-<p align="center"><img src="https://i.imgur.com/XNHC0VR.png" alt="Primitive energy estimator (8 beads)" width="450" /></p>
+<p align="center"><img src="https://i.imgur.com/3avp94W.png" alt="Primitive energy estimator (8 beads)" width="450" /></p>
 
-For the centroid-virial kinetic energy estimator ($\beta\hbar\omega_0 = 5$):
+For the centroid-virial kinetic energy estimator ($\beta\hbar\omega_0 = 6$):
 
-<p align="center"><img src="https://i.imgur.com/vwUNzgX.png" width="450" /></p>
+<p align="center"><img src="https://i.imgur.com/MdJAGK9.png" width="450" /></p>
 
-For the centroid-virial kinetic energy estimator with $\beta\hbar\omega_0 = 6$ and averaging over $10$ simulations per each bead:
-
-<p align="center"><img src="https://i.imgur.com/ElCvpF4.png" width="450" /></p>
 
 ## Mean energy computation
 
