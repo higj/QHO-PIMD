@@ -18,9 +18,9 @@ For the centroid-virial kinetic energy estimator (two runs):
 
 ## Energy vs number of beads
 
-For the default (primitive) energy estimator ($\beta\hbar\omega_0 = 5$):
+For the default (primitive) energy estimator ($\beta\hbar\omega_0 = 6$):
 
-<p align="center"><img src="https://i.imgur.com/3avp94W.png" alt="Primitive energy estimator (8 beads)" width="450" /></p>
+<p align="center"><img src="https://i.imgur.com/3avp94W.png" alt="Primitive energy estimator" width="450" /></p>
 
 For the centroid-virial kinetic energy estimator ($\beta\hbar\omega_0 = 6$):
 
