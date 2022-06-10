@@ -26,7 +26,7 @@ For the centroid-virial kinetic energy estimator ($\beta\hbar\omega_0 = 5$):
 
 <p align="center"><img src="https://i.imgur.com/vwUNzgX.png" width="450" /></p>
 
-For the centroid-virial kinetic energy estimator with $\beta\hbar\omega_0 = 6$ and averaging over $10$ simulations per beach bead:
+For the centroid-virial kinetic energy estimator with $\beta\hbar\omega_0 = 6$ and averaging over $10$ simulations per each bead:
 
 <p align="center"><img src="https://i.imgur.com/ElCvpF4.png" width="450" /></p>
 
