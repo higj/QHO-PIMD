@@ -44,8 +44,6 @@ dir = 'e-vs-beta'
 timestamp = int(time.time())
 fig.savefig("{}/{}.png".format(dir, timestamp), bbox_inches='tight')
 
-print(energy_arr)
-
 misc.write_report(dir, bhw_arr, energy_arr, timestamp,
                   {'Number of beads (P)' : beads_num,
                    'Threshold' : threshold,
