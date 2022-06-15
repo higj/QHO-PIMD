@@ -45,6 +45,6 @@ fig.savefig("{}/{}.png".format(dir, timestamp), bbox_inches='tight')
 
 misc.write_report(dir, bhw_arr, energy_arr, timestamp,
                   {'Number of beads (P)' : beads_num,
-                   'Threshold' : threshold,
+                   'Threshold' : params.threshold,
                    'Averaging per beta' : avg_per_beta},
                   runtime=t1 - t0)
