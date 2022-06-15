@@ -6,7 +6,7 @@ from md import MDSimulation
 import time
 
 energy_arr = []
-bhw_arr = np.linspace(0.1, 6, 30)
+bhw_arr = np.linspace(0.1, 6, 10)
 bhw_cont_arr = np.linspace(0.1, 6, 100)
 
 beads_num = 15
@@ -32,14 +32,14 @@ t1 = time.time()
 
 fig = plt.figure()
 plt.plot(bhw_arr, np.array(energy_arr), '-o', color='black', label='PIMD')
-plt.plot(avg_per_beta, misc.energy_vs_beta(avg_per_beta), color='r', label='Theory')
+plt.plot(bhw_cont_arr, misc.energy_vs_beta(bhw_cont_arr), color='r', label='Theory')
 plt.xlabel(r"$\beta \hbar \omega_0$", fontsize=15)
 plt.ylabel(r"$\left\langle E\right\rangle / \hbar \omega_0$", fontsize=15)
 plt.title(misc.print_title(beads_num, params.dt, params.steps, params.gamma, params.estimator))
 plt.legend()
 plt.show()
 
-dir = 'e-vs-beta'
+dir = 'out/e-vs-beta'
 timestamp = int(time.time())
 fig.savefig("{}/{}.png".format(dir, timestamp), bbox_inches='tight')
 

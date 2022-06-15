@@ -23,7 +23,7 @@ class MDSimulation:
         mean_energy: The mean energy calculated during the simulation using an estimator specified by est
     """
 
-    def __init__(self, beta, dt, mass, bead_num=6, size=1, save_freq=1, tsteps=1000, enable_thermostat=True, estimator_type='default', threshold=0.1):
+    def __init__(self, beta, dt, mass, bead_num=6, size=1, save_freq=1, tsteps=1e5, enable_thermostat=True, estimator_type='default', threshold=0.1):
         self.beta = beta
         self.p = bead_num
         self.dt = dt
@@ -34,7 +34,7 @@ class MDSimulation:
         self.tsteps = int(tsteps)
         self.enable_thermostat = enable_thermostat
         self.est_type = estimator_type
-        self.threshold = threshold*tsteps
+        self.threshold = threshold*self.tsteps
 
         self.sim_time = self.dt * self.tsteps  # Total simulation time
 

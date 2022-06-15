@@ -33,7 +33,7 @@ plt.ylabel(r"$\left\langle E\right\rangle / \hbar \omega_0$", fontsize=15)
 plt.title(misc.print_title(bhw, params.dt, params.steps, params.gamma, params.estimator, type='e-vs-p'))
 plt.show()
 
-dir = 'e-vs-p'
+dir = 'out/e-vs-p'
 timestamp = int(time.time())
 fig.savefig("{}/{}.png".format(dir, timestamp), bbox_inches='tight')
 
