@@ -10,7 +10,6 @@ bhw_arr = np.linspace(0.1, 6, 30)
 bhw_cont_arr = np.linspace(0.1, 6, 100)
 
 beads_num = 15
-threshold = 0.1
 avg_per_beta = 1
 
 t0 = time.time()
@@ -22,7 +21,7 @@ for bhw in bhw_arr:
         md_sim = MDSimulation(beta, dt=params.dt,
                               mass=params.mass, bead_num=beads_num, tsteps=params.steps,
                               estimator_type=params.estimator, save_freq=params.save_freq,
-                              threshold=threshold)
+                              threshold=params.threshold)
         md_sim.run()
 
         bead_energy.append(md_sim.mean_energy / (params.umap['hbar'] * params.qho_freq))

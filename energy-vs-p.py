@@ -8,7 +8,6 @@ import time
 energy_arr = []
 beads_num_arr = [1, 5, 10, 20, 25, 30, 35, 40, 45, 50, 55, 60]
 
-threshold = 0.1
 avg_per_bead = 1
 bhw = 6  # beta*hbar*omega
 
@@ -19,7 +18,7 @@ for beads_num in beads_num_arr:
     for i in range(avg_per_bead):
         md_sim = MDSimulation(bhw / (params.umap['hbar'] * params.qho_freq), dt=params.dt,
                               mass=params.mass, bead_num=int(beads_num), tsteps=params.steps,
-                              estimator_type=params.estimator, threshold=threshold)
+                              estimator_type=params.estimator, threshold=params.threshold)
         md_sim.run()
         energy_p.append(md_sim.mean_energy / (params.umap['hbar'] * params.qho_freq))
 
