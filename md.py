@@ -1,6 +1,4 @@
 import numpy as np
-import random
-import misc
 import params
 
 
@@ -16,11 +14,12 @@ class MDSimulation:
         save_freq: Frequency of calculations (e.g., average energy)
         tsteps: Total number of time increments
         enable_thermostat: A boolean indicating if a Langevin thermostat should be enabled
-        est:
+        estimator_type:
             Specifies the type of estimator to be used for calculating the average energy.
             'default' corresponds to the primitive energy estimator (Eqn. 12.3.20 in Tuckerman)
             'virial' corresponds to the virial energy estimator (Eqn. 12.6.34 in Tuckerman)
             'centroid_virial' corresponds to the centroid-virial (kinetic) energy estimator (J. Chem. Phys., 76, 5150, 1982)
+        threshold: Specifies the threshold value for thermalization (between 0 and 1)
         mean_energy: The mean energy calculated during the simulation using an estimator specified by est
     """
 
@@ -35,13 +34,13 @@ class MDSimulation:
         self.tsteps = int(tsteps)
         self.enable_thermostat = enable_thermostat
         self.est_type = estimator_type
-        self.threshold = threshold
+        self.threshold = threshold*tsteps
 
         self.sim_time = self.dt * self.tsteps  # Total simulation time
 
         # Generate initial conditions
         self.pos_arr = self.gen_pos()  # Current positions of the beads
-        self.vel_arr = self.sample_mb()  # Current velocities of the beads (Maxwell-Boltzmann distribution)
+        self.momenta = self.mass_arr * self.sample_mb()  # Beads momenta (velocities sampled from the MB distribution)
 
         # Initialize forces
         self.force_arr = np.zeros_like(self.pos_arr)
@@ -50,8 +49,6 @@ class MDSimulation:
 
     def run(self):
         """Run an MD simulation by performing a series of velocity Verlet steps."""
-
-        calc_threshold = int(self.threshold * self.tsteps)
 
         for step in range(self.tsteps):
             if self.enable_thermostat:
@@ -62,7 +59,7 @@ class MDSimulation:
             if self.enable_thermostat:
                 self.langevin_step()  # Perform a Langevin step (thermostat)
 
-            if step < calc_threshold:
+            if step < self.threshold:
                 continue
 
             # Perform calculations every nth step (where n=save_freq)
@@ -72,25 +69,18 @@ class MDSimulation:
                 # by Ceriotti, Manolopoulos, Markland and Rossi; "CMMR" for short)
                 self.mean_energy += self.total_energy_estimator()
 
-        self.mean_energy /= self.tsteps - calc_threshold
+        # Integration begins after thermalization
+        self.mean_energy *= self.save_freq / (self.tsteps - self.threshold)
 
     def gen_pos(self):
         """Generate random positions for the initial conditions by sampling a uniform distribution."""
 
-        return np.random.uniform(0, self.size, self.p)
+        return np.random.uniform(0, self.size*params.umap['picometer'], self.p)
 
     def sample_mb(self):
         """Sample the Maxwell-Boltzmann distribution and return an array of velocities."""
 
-        velocities_arr = []  # Initialize the velocities array
-
-        for mass in self.mass_arr:
-            # For each bead we calculate the 1D Maxwell-Boltzmann CDF and then invert it
-            inv_cdf = misc.inv_cdf(self.beta, mass)
-            # Sample the generated CDF and populate the velocity array
-            velocities_arr.append(inv_cdf(random.uniform(0, 1)))
-
-        return np.array(velocities_arr)
+        return np.random.normal(scale=1/np.sqrt(self.beta * self.mass_arr))
 
     def langevin_step(self):
         """Implement a thermostat according to the Langevin scheme. This is necessary in order to
@@ -98,32 +88,33 @@ class MDSimulation:
 
         noise = np.random.normal(size=self.p)  # The noise term (time derivative of a Wiener process)
         a = np.exp(-0.5 * params.gamma * self.dt)
-        b = np.sqrt((1 - a**2) / (self.mass_arr * self.beta))
-        self.vel_arr = a * self.vel_arr + b * noise
+        b = np.sqrt((1 - a**2) * self.mass_arr / self.beta)
+        self.momenta = a * self.momenta + b * noise
 
     def vv_step(self):
         """Propagate position and velocity according to the symmetric-split velocity Verlet algorithm."""
 
-        # First step: velocities are propagated half a step
-        self.vel_arr += self.dt*self.force_arr / (2 * self.mass_arr)
+        # First step: momenta are propagated half a step
+        self.momenta += 0.5 * self.dt * self.force_arr
         # Second step: positions are propagated using the new velocities
-        self.pos_arr += self.dt * self.vel_arr
+        self.pos_arr += self.dt * self.momenta / self.mass_arr
         # Third step: forces are updated using the new positions
         self.update_forces()
-        # Fourth step: velocities are propagated once more
-        self.vel_arr += self.dt*self.force_arr / (2 * self.mass_arr)
+        # Fourth step: momenta are propagated once more
+        self.momenta += 0.5 * self.dt * self.force_arr
 
     def update_forces(self):
         """Update forces for all the beads."""
 
-        self.force_arr = np.array([self.get_total_force(bead_i) for bead_i in range(self.p)])
+        for i in range(self.p):
+            self.force_arr[i] = self.get_total_force(i)
 
     def get_spring_force(self, bead_num):
         """Returns the force exerted on a specific bead by the two neighboring beads (the beads are enumerated
         from 0 to P-1). The force is given by Eqn. (12.6.4) in Tuckerman.
         """
 
-        chain_frequency = np.sqrt(self.p)/(self.beta*params.hbar)  # Self-explanatory
+        chain_frequency = np.sqrt(self.p)/(self.beta*params.umap['hbar'])  # Self-explanatory
         prefactor = self.mass_arr[bead_num] * chain_frequency**2  # Nearest-neighbor coupling constant
         # Only interactions with the two closest neighbors are included.
         # The modulo operation reflects the periodic boundary conditions.
@@ -135,8 +126,8 @@ class MDSimulation:
         In this particular case the potential is that of a simple harmonic oscillator.
         """
 
-        prefactor = self.mass_arr[bead_num] * params.qho_freq**2
-        return -(prefactor*self.pos_arr[bead_num]) / self.p
+        prefactor = self.mass_arr[bead_num] * params.qho_freq**2 / self.p
+        return -prefactor*self.pos_arr[bead_num]
 
     def get_total_force(self, bead_num):
         """Calculate the total force acting on a given bead."""
@@ -159,7 +150,7 @@ class MDSimulation:
 
         prefactor = 0.5 * self.p / self.beta
 
-        c = self.mass_arr / (self.beta * params.hbar**2)
+        c = self.mass_arr / (self.beta * params.umap['hbar']**2)
 
         corr_term = 0  # Corresponds to the term describing the cross-correlations between different replicas
 
