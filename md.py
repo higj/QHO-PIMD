@@ -45,7 +45,15 @@ class MDSimulation:
         # Initialize forces
         self.force_arr = np.zeros_like(self.pos_arr)
 
-        self.mean_energy = 0
+        # Output
+        self.mean_energy = 0  # Store the mean quantum energy
+        self.classical_energy = []  # Records of the classical energy
+
+    def force_initial_conditions(self, pos, momenta):
+        """Used to set the initial conditions manually."""
+
+        self.pos_arr = pos
+        self.momenta = momenta
 
     def run(self):
         """Run an MD simulation by performing a series of velocity Verlet steps."""
@@ -64,10 +72,15 @@ class MDSimulation:
 
             # Perform calculations every nth step (where n=save_freq)
             if step % self.save_freq == 0:
-                # Accumulate contributions to the average energy
-                # (Based on Eqn. 2.37 from "Path Integral Methods in Atomistic Modelling"
-                # by Ceriotti, Manolopoulos, Markland and Rossi; "CMMR" for short)
-                self.mean_energy += self.total_energy_estimator()
+                if self.classical:
+                    # In the classical regime (used for calibrating dt), we accumulate the classical energies
+                    # of the polymer chain
+                    self.classical_energy.append(self.get_classical_energy())
+                else:
+                    # Accumulate contributions to the average energy
+                    # (Based on Eqn. 2.37 from "Path Integral Methods in Atomistic Modelling"
+                    # by Ceriotti, Manolopoulos, Markland and Rossi; "CMMR" for short)
+                    self.mean_energy += self.total_energy_estimator()
 
         # Integration begins after thermalization
         self.mean_energy *= self.save_freq / (self.tsteps - self.threshold)
@@ -201,3 +214,27 @@ class MDSimulation:
             return 2 * self.kinetic_energy_estimator()
 
         return self.potential_energy_estimator() + self.kinetic_energy_estimator()
+
+    # Classical calculations
+    def get_classical_energy(self):
+        """Returns the total classical energy of the chain polymer."""
+
+        kinetic = 0.5 * self.momenta**2 / self.mass_arr
+
+        chain_frequency = np.sqrt(self.P) / (self.beta * params.umap['hbar'])
+        dx = np.roll(self.pos_arr, 1) - self.pos_arr
+        elastic = 0.5 * self.mass_arr * (chain_frequency * dx)**2
+
+        external = 0.5 * self.mass_arr * (params.qho_freq * self.pos_arr)**2 / self.P
+
+        return np.sum(kinetic + elastic + external)
+
+    def get_classical_de(self):
+        """Returns the maximal relative deviation in the total classical energy (in percents)."""
+
+        max_e = max(abs(min(self.classical_energy)), abs(max(self.classical_energy)))
+        e0 = np.mean(self.classical_energy)
+        de = abs(max_e - e0)
+
+        # Return dE/E in percents
+        return (de/e0)*100
