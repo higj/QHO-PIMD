@@ -7,7 +7,7 @@ umap = units.UnitSystem(unit_type).factors
 
 # System parameters
 qho_freq = 0.05*umap['eV']
-mass = 39.9480*umap['amu']  # Argon mass in atomic units
+mass = 39.9480*umap['amu']  # Argon mass in daltons
 
 # Simulation parameters
 dt = 1  # In atomic units of time
