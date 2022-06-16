@@ -8,7 +8,7 @@ class UnitSystem:
             return {
                 'hbar': 1.0,
                 'kB': 1.0,
-                'amu': 1822.8885,
+                'amu': 1822.8885,  # Dalton in terms of the electron mass
                 'eV': 0.036749326,
                 'kelvin': 3.1668152e-06,
                 'femtosec': 41.341373,
