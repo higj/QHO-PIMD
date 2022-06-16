@@ -32,7 +32,7 @@ time steps:
 
 In this particular case the times are measured in atomic units ($\sim 0.0242 \~ \mathrm{fs}$).
 
-## Energy vs β
+## Energy vs. β
 
 After choosing the optimal time step (`dt=1` in this case) we set the Langevin friction term to 
 $\gamma = \frac{1}{100 \Delta t}$, calculate the mean *quantum* energy of the harmonic oscillator
@@ -44,7 +44,7 @@ For the virial energy estimator:
 
 <p align="center"><img src="https://i.imgur.com/Jg9sWnx.png" alt="Virial (15 beads)" width="450" />
 
-## Energy vs number of beads
+## Energy vs. number of beads
 
 The optimal time step is higher in the low temperature regime (high $\beta$). 
 Therefore, the dependence of the average energy for $\beta \hbar \omega_0 = 6$ can
