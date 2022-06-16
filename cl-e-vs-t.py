@@ -19,7 +19,8 @@ for i in range(len(dts)):
     md_sim = MDSimulation(6 / (params.umap['hbar'] * params.qho_freq), dt=dts[i],
                           mass=params.mass, bead_num=beads_num, tsteps=steps[i],
                           estimator_type=params.estimator, save_freq=save_freq,
-                          enable_thermostat=False, threshold=params.threshold, classical=True)
+                          enable_thermostat=False, threshold=params.threshold,
+                          classical=True)
     if i == 0:
         pos = md_sim.pos_arr
         momenta = md_sim.momenta
@@ -42,7 +43,7 @@ for i in range(len(dts)):
     plt.axhline(y=0, color='r', linestyle='--')
     plt.ticklabel_format(useMathText=True, scilimits=(0,0))
 
-    print("ΔE/E: {}%".format(md_sim.get_classical_de()))
+    print("Δt = {} -> ΔE/E = {}%".format(dts[i], md_sim.get_classical_de()))
 
 plt.xlabel(r"$t$", fontsize=15)
 plt.ylabel(r"$\Delta E / \bar{E}$", fontsize=15)

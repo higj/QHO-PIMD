@@ -23,7 +23,7 @@ class MDSimulation:
         mean_energy: The mean energy calculated during the simulation using an estimator specified by est
     """
 
-    def __init__(self, beta, dt, mass, bead_num=6, size=1, save_freq=1, tsteps=1e5, enable_thermostat=True, estimator_type='default', threshold=0.1):
+    def __init__(self, beta, dt, mass, bead_num=6, size=1, save_freq=1, tsteps=1e5, enable_thermostat=True, classical=False, estimator_type='default', threshold=0.1):
         self.beta = beta
         self.p = bead_num
         self.dt = dt
@@ -33,6 +33,7 @@ class MDSimulation:
         self.save_freq = save_freq
         self.tsteps = int(tsteps)
         self.enable_thermostat = enable_thermostat
+        self.classical = classical
         self.est_type = estimator_type
         self.threshold = threshold*self.tsteps
 
@@ -221,11 +222,11 @@ class MDSimulation:
 
         kinetic = 0.5 * self.momenta**2 / self.mass_arr
 
-        chain_frequency = np.sqrt(self.P) / (self.beta * params.umap['hbar'])
+        chain_frequency = np.sqrt(self.p) / (self.beta * params.umap['hbar'])
         dx = np.roll(self.pos_arr, 1) - self.pos_arr
         elastic = 0.5 * self.mass_arr * (chain_frequency * dx)**2
 
-        external = 0.5 * self.mass_arr * (params.qho_freq * self.pos_arr)**2 / self.P
+        external = 0.5 * self.mass_arr * (params.qho_freq * self.pos_arr)**2 / self.p
 
         return np.sum(kinetic + elastic + external)
 
