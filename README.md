@@ -82,7 +82,12 @@ In all cases the expectation value is evaluated using Eqn. (2.37) from [CMMR]
 
 $$\left< \hat{E} \right> = \frac{1}{T} \int_{0}^{T} dt \~ E_P(t) \approx \frac{n_{\mathrm{freq}}}{(1-\eta) n_{\mathrm{steps}}} \sum_{\mathrm{iterations}} E_P (t)$$
 
-where $T$ is the total simulation time, $E_P$ is a PIMD estimator for the total energy, $n_{\mathrm{steps}}$ is the number of steps, $n_{\mathrm{freq}}$ is the recording step and $\eta$ is the threshold (between 0 and 1). This expression is equivalent to the ensemble average if the system is ergodic. In practice, the continuous integral is replaced by the discrete sum over all the time steps.
+where $T$ is the total simulation time, 
+$E_P$ is a PIMD estimator for the total energy,
+$n_{\mathrm{steps}}$ is the number of steps,
+$n_{\mathrm{freq}}$ is the recording step
+and $\eta$ is the threshold (between 0 and 1).
+This expression is equivalent to the ensemble average if the system is ergodic. In practice, the continuous integral is replaced by the discrete sum over all the time steps.
 
 ## References
 
