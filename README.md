@@ -30,7 +30,7 @@ time steps:
 
 <p align="center"><img src="https://i.imgur.com/rJOpSmz.png" width="450" /></p>
 
-In this particular case the times are measured in atomic units ($\sim 0.0242 \, \mathrm{fs}$).
+In this particular case the times are measured in atomic units ($\sim 0.0242 \~ \mathrm{fs}$).
 
 ## Energy vs β
 
