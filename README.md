@@ -54,11 +54,9 @@ For the default (primitive) energy estimator ($\beta\hbar\omega_0 = 6$):
 
 <p align="center"><img src="https://i.imgur.com/oy2wcBJ.png" alt="Primitive energy estimator" width="450" /></p>
 
-<!---
-For the virial kinetic energy estimator ($\beta\hbar\omega_0 = 6$):
+For the centroid-virial kinetic energy estimator ($\beta\hbar\omega_0 = 6$):
 
-<p align="center"><img src="" width="450" /></p>
--->
+<p align="center"><img src="https://i.imgur.com/QfsxG6g.png" width="450" /></p>
 
 ## Mean energy computation
 
