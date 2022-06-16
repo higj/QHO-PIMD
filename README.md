@@ -10,11 +10,13 @@ Implementation of PIMD for a one-dimensional argon atom in a QHO potential with 
 
 ## Calibrating the timestep
 
-The optimal value of $\Delta t$ for a given $\beta$ is defined to be the largest $\Delta t$ for which the
-deviations of the classical energies of the polymer do not exceed $0.1%$. In other words, the criterion is
+The optimal value of $\Delta t$ for a
+given $\beta$ is defined to be the 
+largest $\Delta t$ for which the 
+deviations of the classical energies of the polymer do not exceed $0.1\\%$. In other words, the criterion is
 
 $$
-\left | \frac{\Delta E}{E_0} \cdot 100% \right | \leq 0.1 
+\left | \frac{\Delta E}{E_0} \cdot 100\\% \right | \leq 0.1 
 $$
 
 Notice that for different temperatures (betas) the optimal $\Delta t$ will be different. Therefore,
@@ -22,7 +24,8 @@ if one insists on using the same value of $\Delta t$ for different temperatures,
 convergence in the desired temperature range.
 
 The calibration procedure described above is performed in `cl-e-vs-t.py`. 
-There we take $P=10$ and $\beta \hbar \omega_0 = 6$ and perform a classical simulation for different 
+There we take $P=10$ 
+and $\beta \hbar \omega_0 = 6$ and perform a classical simulation for different 
 time steps:
 
 <p align="center"><img src="https://i.imgur.com/rJOpSmz.png" width="450" /></p>
@@ -51,14 +54,15 @@ For the default (primitive) energy estimator ($\beta\hbar\omega_0 = 6$):
 
 <p align="center"><img src="https://i.imgur.com/oy2wcBJ.png" alt="Primitive energy estimator" width="450" /></p>
 
+<!---
 For the virial kinetic energy estimator ($\beta\hbar\omega_0 = 6$):
 
 <p align="center"><img src="" width="450" /></p>
-
+-->
 
 ## Mean energy computation
 
-The **primitive** (or *thermodynamic*) energy estimator is calculated using Eqns. (2.53) and (3.3) from [CMMR]:
+The **primitive** (or **thermodynamic**) energy estimator is calculated using Eqns. (2.53) and (3.3) from [CMMR]:
 
 $$E^{\mathrm{TD}}=\frac{P}{2\beta}\left[1-\sum_{i=1}^{P}\frac{m}{\beta\hbar^{2}}\left(q_{i}-q_{i+1}\right)^{2}\right]+\frac{1}{P}\sum_{i=1}^{P}V\left(q_{i}\right)$$
 
