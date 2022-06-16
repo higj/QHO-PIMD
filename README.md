@@ -16,7 +16,7 @@ largest $\Delta t$ for which the
 deviations of the classical energies of the polymer do not exceed $0.1\\%$. In other words, the criterion is
 
 $$
-\left | \frac{\Delta E}{E_0} \cdot 100\\% \right | \leq 0.1 
+\left | \frac{\Delta E}{E_0} \cdot 100\\% \right | \leq 0.1 \\%
 $$
 
 Notice that for different temperatures (betas) the optimal $\Delta t$ will be different. Therefore,
