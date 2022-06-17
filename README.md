@@ -43,6 +43,21 @@ as a function of the thermodynamic beta, and then compare it to the theoreticall
 For the virial energy estimator:
 
 <p align="center"><img src="https://i.imgur.com/Jg9sWnx.png" alt="Virial (15 beads)" width="450" />
+  
+  --- 
+  
+  Using variable timesteps results in an even better plot:
+  
+  <p align="center"><img src="https://i.imgur.com/smpVtJY.png" alt="Primitive energy estimator (30 beads)" width="450" /></p>
+  
+  Here we  used the following array of optimal timesteps:
+  
+  ```
+  dts = [0.671, 2.0, 3.0, 4.11, 5.67, 7.22,
+         8.78, 10.33, 11.89, 11.89, 13.44, 15,
+         16, 16, 21, 21, 16, 26, 26, 21, 26, 31,
+         26, 31, 31, 31, 31, 31, 41, 36]
+```
 
 ## Energy vs. number of beads
 
